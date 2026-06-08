@@ -1,0 +1,206 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* #EDF8F4 */
+    --background: 158 42% 95%;
+    /* #013220 */
+    --foreground: 163 96% 10%;
+
+    /* #FFFFFF */
+    --card: 0 0% 100%;
+    --card-foreground: 163 96% 10%;
+
+    /* #013220 */
+    --primary: 163 96% 10%;
+    --primary-foreground: 0 0% 100%;
+
+    /* #004225 */
+    --secondary: 152 100% 13%;
+    --secondary-foreground: 0 0% 100%;
+
+    /* #93D9C4 */
+    --muted: 162 48% 71%;
+    /* #004225 */
+    --muted-foreground: 152 80% 22%;
+
+    /* #40B794 */
+    --accent: 162 48% 48%;
+    --accent-foreground: 0 0% 100%;
+
+    /* #93D9C4 */
+    --border: 162 48% 71%;
+    --input: 162 48% 71%;
+    --ring: 162 48% 48%;
+
+    --radius: 1rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    border-radius: 999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--accent) / 0.7);
+  }
+}
+
+@layer components {
+  .glass {
+    @apply border border-border bg-white/85 shadow-sm backdrop-blur-xl;
+  }
+
+  .glass-strong {
+    @apply border border-border bg-white/95 shadow-md backdrop-blur-2xl;
+  }
+
+  .surface {
+    @apply rounded-2xl border border-border bg-card shadow-sm transition-shadow duration-300;
+  }
+
+  .surface-muted {
+    @apply rounded-2xl border border-border bg-background;
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(
+      135deg,
+      #013220 0%,
+      #004225 40%,
+      #40b794 75%,
+      #93d9c4 100%
+    );
+  }
+
+  .text-gradient-brand {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(120deg, #013220, #40b794);
+  }
+
+  .btn-gradient {
+    color: #ffffff;
+    background-color: #013220;
+    background-image: linear-gradient(
+      to right,
+      #013220 0%,
+      #004225 50%,
+      #40b794 100%
+    );
+    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  }
+
+  .btn-gradient:hover {
+    filter: brightness(1.05);
+    box-shadow: 0 0 48px -12px rgba(64, 183, 148, 0.35);
+  }
+
+  .border-gradient {
+    position: relative;
+  }
+  .border-gradient::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(1, 50, 32, 0.35),
+      rgba(64, 183, 148, 0.45),
+      rgba(147, 217, 196, 0.6)
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  .section {
+    @apply relative py-20 md:py-28;
+  }
+
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full border border-border bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .mask-fade-y {
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent,
+      black 12%,
+      black 88%,
+      transparent
+    );
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 10%,
+      black 90%,
+      transparent
+    );
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

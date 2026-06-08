@@ -1,0 +1,37 @@
+{
+  "hash": "2b056798",
+  "configHash": "35c923e5",
+  "lockfileHash": "db6e65ba",
+  "browserHash": "8d517d56",
+  "optimized": {
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "1864d6cf",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "ea5558e9",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "0f76ca18",
+      "needsInterop": true
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "9be0e0cb",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-KZSZXOOM": {
+      "file": "chunk-KZSZXOOM.js"
+    }
+  }
+}
