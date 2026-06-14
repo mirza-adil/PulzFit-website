@@ -5,7 +5,6 @@ import { ScoreRing } from "@/components/visuals/ScoreRing";
 import { SleepStages } from "@/components/visuals/SleepStages";
 import { LineChart } from "@/components/visuals/LineChart";
 import { PhoneMockup } from "@/components/visuals/PhoneMockup";
-import { Counter } from "@/components/motion/Counter";
 
 const highlights = [
   { label: "Deep Sleep", value: "1h 48m", color: "#013220" },
@@ -108,64 +107,20 @@ export function Sleep() {
             </div>
           </div>
 
-          {/* Phone mockup */}
           <Reveal direction="left" className="hidden justify-center lg:flex">
-            <PhoneMockup className="animate-float">
-              <SleepApp />
+            <PhoneMockup className="animate-float" showNotch={false}>
+              <img
+                src="/sleep-app-screen.png?v=5"
+                alt="PulzFit app dashboard showing sleep quality and health metrics"
+                className="block h-full w-full object-cover object-top"
+                loading="lazy"
+                decoding="async"
+                draggable={false}
+              />
             </PhoneMockup>
           </Reveal>
         </div>
       </div>
     </section>
-  );
-}
-
-function SleepApp() {
-  return (
-    <div className="flex h-full flex-col p-5 pt-10">
-      <p className="text-xs uppercase tracking-widest text-muted-foreground">
-        Sleep
-      </p>
-      <h3 className="mt-1 font-display text-xl font-bold">Good morning, Alex</h3>
-
-      <div className="mt-6 flex justify-center">
-        <ScoreRing
-          value={88}
-          size={150}
-          stroke={12}
-          color="#004225"
-          label="88"
-          sublabel="sleep score"
-        />
-      </div>
-
-      <div className="mt-6 space-y-3">
-        {[
-          { label: "Deep", value: "1h 48m", w: "26%", c: "#013220" },
-          { label: "REM", value: "1h 32m", w: "22%", c: "#40B794" },
-          { label: "Light", value: "4h 06m", w: "52%", c: "#004225" },
-        ].map((s) => (
-          <div key={s.label}>
-            <div className="flex justify-between text-xs">
-              <span className="text-muted-foreground">{s.label}</span>
-              <span className="font-medium">{s.value}</span>
-            </div>
-            <div className="mt-1 h-2 overflow-hidden rounded-full bg-muted">
-              <div
-                className="h-full rounded-full"
-                style={{ width: s.w, background: s.c }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-auto rounded-2xl border border-pulz-200 bg-pulz-100/50 p-4">
-        <p className="text-xs text-muted-foreground">Readiness</p>
-        <p className="font-display text-2xl font-bold text-pulz-500">
-          <Counter to={92} suffix="%" />
-        </p>
-      </div>
-    </div>
   );
 }
