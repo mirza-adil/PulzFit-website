@@ -32,7 +32,7 @@ export const pricingPlans: PricingPlan[] = [
     id: "plus",
     name: "PulzFit Plus",
     tagline: "Unlock the full AI health intelligence engine.",
-    price: 6.99,
+    price: 4.99,
     period: "per month",
     highlight: true,
     badge: "Most popular",
@@ -50,7 +50,7 @@ export const pricingPlans: PricingPlan[] = [
     id: "family",
     name: "Family",
     tagline: "Care for up to 6 people you love.",
-    price: 12.99,
+    price: 6.99,
     period: "per month",
     features: [
       "Everything in Plus",
