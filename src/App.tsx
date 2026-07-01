@@ -8,7 +8,6 @@ import { HeartHealth } from "@/components/sections/HeartHealth";
 import { AICoach } from "@/components/sections/AICoach";
 import { Sports } from "@/components/sections/Sports";
 import { FamilyCare } from "@/components/sections/FamilyCare";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { Pricing } from "@/components/sections/Pricing";
 import { FAQ } from "@/components/sections/FAQ";
 import { ContactCTA } from "@/components/sections/ContactCTA";
@@ -51,7 +50,6 @@ function App() {
         <AICoach />
         <Sports />
         <FamilyCare />
-        <Testimonials />
         <Pricing />
         <FAQ />
         <ContactCTA />
