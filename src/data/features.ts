@@ -30,14 +30,16 @@ export interface HealthFeature {
   accent: string;
   viz: VizType;
   metric?: string;
+  /** Hidden from the site for now; set to false (or remove) to show again */
+  hidden?: boolean;
 }
 
-export const healthFeatures: HealthFeature[] = [
+export const allHealthFeatures: HealthFeature[] = [
   {
     id: "ecg",
     title: "ECG Heart Health Analysis",
     description:
-      "Medical-grade single-lead ECG captures your heart's electrical rhythm and flags irregularities in seconds.",
+      "Single-lead ECG captures your heart's electrical rhythm and flags irregularities in seconds.",
     icon: Activity,
     accent: pulzPalette.deep,
     viz: "wave",
@@ -155,6 +157,7 @@ export const healthFeatures: HealthFeature[] = [
   },
   {
     id: "blood",
+    hidden: true,
     title: "Blood Component Monitoring",
     description:
       "Optical sensing estimates key blood components to give a fuller wellness picture.",
@@ -165,6 +168,7 @@ export const healthFeatures: HealthFeature[] = [
   },
   {
     id: "glucose",
+    hidden: true,
     title: "Non-Invasive Blood Sugar",
     description:
       "Needle-free glucose trend assessment to help you understand metabolic patterns.",
@@ -175,6 +179,7 @@ export const healthFeatures: HealthFeature[] = [
   },
   {
     id: "body-comp",
+    hidden: true,
     title: "Body Composition Analysis",
     description:
       "Understand muscle, water and fat distribution to guide smarter training.",
@@ -185,6 +190,7 @@ export const healthFeatures: HealthFeature[] = [
   },
   {
     id: "bmi",
+    hidden: true,
     title: "BMI Monitoring",
     description:
       "Track body-mass index over time with clear, trend-aware visualizations.",
@@ -195,6 +201,7 @@ export const healthFeatures: HealthFeature[] = [
   },
   {
     id: "body-fat",
+    hidden: true,
     title: "Body Fat Percentage",
     description:
       "Monitor body-fat percentage trends and celebrate progress with precision.",
@@ -204,3 +211,6 @@ export const healthFeatures: HealthFeature[] = [
     metric: "18%",
   },
 ];
+
+/** Features currently shown on the site. */
+export const healthFeatures = allHealthFeatures.filter((f) => !f.hidden);

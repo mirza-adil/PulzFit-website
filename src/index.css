@@ -43,14 +43,34 @@
   }
 
   html {
+    /* clip (not hidden): stops off-screen reveal offsets widening the mobile
+       layout viewport, without creating a scroll container */
+    overflow-x: clip;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
   }
 
+  /* Lenis: avoid fighting native smooth scroll while it is active */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+
+  /* Keep headings clear of the fixed navbar on native anchor jumps */
+  section[id] {
+    scroll-margin-top: 5.5rem;
+  }
+
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    overflow-x: hidden;
+    overflow-x: clip;
     line-height: 1.6;
   }
 
@@ -75,20 +95,61 @@
 }
 
 @layer components {
-  .glass {
-    @apply border border-border bg-white/85 shadow-sm backdrop-blur-xl;
+  /*
+   * Frosted glass. Fill opacity is higher than "classic" glassmorphism because the
+   * text on it is dark green: 60–72% white keeps body copy above 4.5:1 even where
+   * the most saturated backdrop blob sits behind it. Pair with <GlassBackdrop />
+   * so the blur has colour to frost.
+   */
+  .glass,
+  .glass-strong {
+    --glass-fill: 255 255 255 / 0.6;
+    background-color: rgb(var(--glass-fill));
+    border: 1px solid rgb(255 255 255 / 0.65);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    backdrop-filter: blur(18px) saturate(160%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.85),
+      0 0 0 1px rgb(1 50 32 / 0.06),
+      0 10px 30px -12px rgb(1 50 32 / 0.18);
   }
 
   .glass-strong {
-    @apply border border-border bg-white/95 shadow-md backdrop-blur-2xl;
+    --glass-fill: 255 255 255 / 0.72;
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    backdrop-filter: blur(24px) saturate(170%);
+    box-shadow:
+      inset 0 1px 0 rgb(255 255 255 / 0.9),
+      0 0 0 1px rgb(1 50 32 / 0.07),
+      0 16px 40px -14px rgb(1 50 32 / 0.22);
   }
 
-  .surface {
-    @apply rounded-2xl border border-border bg-card shadow-sm transition-shadow duration-300;
+  /* No backdrop-filter support, or the visitor asked for less transparency: go solid */
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass,
+    .glass-strong {
+      --glass-fill: 255 255 255 / 0.95;
+    }
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .glass,
+    .glass-strong {
+      --glass-fill: 255 255 255 / 0.97;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
   }
 
-  .surface-muted {
-    @apply rounded-2xl border border-border bg-background;
+  /* Colour field behind glass cards — static gradients, no filter cost */
+  .glass-backdrop {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    overflow: hidden;
+    /* fade out at the section edges so colour never stops on a hard line */
+    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
   }
 
   .text-gradient {
@@ -96,15 +157,14 @@
     background-image: linear-gradient(
       135deg,
       #013220 0%,
-      #004225 40%,
-      #40b794 75%,
-      #93d9c4 100%
+      #004225 45%,
+      #2a8a6e 100%
     );
   }
 
   .text-gradient-brand {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(120deg, #013220, #40b794);
+    background-image: linear-gradient(120deg, #013220, #2a8a6e);
   }
 
   .btn-gradient {
@@ -176,22 +236,6 @@
       transparent
     );
   }
-  .mask-fade-x {
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-    mask-image: linear-gradient(
-      to right,
-      transparent,
-      black 10%,
-      black 90%,
-      transparent
-    );
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -199,6 +243,7 @@
   *::before,
   *::after {
     animation-duration: 0.001ms !important;
+    animation-delay: 0s !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;

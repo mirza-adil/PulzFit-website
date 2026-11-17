@@ -1,4 +1,5 @@
 import { Moon, TrendingUp, BatteryCharging } from "lucide-react";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScoreRing } from "@/components/visuals/ScoreRing";
@@ -15,14 +16,15 @@ const highlights = [
 
 export function Sleep() {
   return (
-    <section id="sleep" className="section">
+    <section id="sleep" className="section isolate">
+      <GlassBackdrop layout="left" />
       <div className="container">
         <SectionHeading
           align="left"
           eyebrow="Sleep Intelligence"
           title={
             <>
-              Wake up knowing{" "}
+              Sleep tracking that shows{" "}
               <span className="text-gradient-brand">exactly how you slept</span>
             </>
           }
@@ -88,7 +90,7 @@ export function Sleep() {
                 <div className="glass h-full rounded-3xl p-6">
                   <div className="flex items-center justify-between">
                     <p className="text-sm font-medium">7-day trend</p>
-                    <span className="flex items-center gap-1 text-xs text-pulz-500">
+                    <span className="flex items-center gap-1 text-xs text-pulz-ink">
                       <TrendingUp className="h-3.5 w-3.5" />
                       +12%
                     </span>
@@ -99,7 +101,7 @@ export function Sleep() {
                     height={90}
                   />
                   <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                    <BatteryCharging className="h-3.5 w-3.5 text-pulz-500" />
+                    <BatteryCharging className="h-3.5 w-3.5 text-pulz-ink" />
                     Recovery improving steadily
                   </div>
                 </div>
@@ -110,7 +112,9 @@ export function Sleep() {
           <Reveal direction="left" className="hidden justify-center lg:flex">
             <PhoneMockup className="animate-float" showNotch={false}>
               <img
-                src="/sleep-app-screen.png?v=5"
+                src="/sleep-app-screen.webp"
+                width={448}
+                height={976}
                 alt="PulzFit app dashboard showing sleep quality and health metrics"
                 className="block h-full w-full object-cover object-top"
                 loading="lazy"

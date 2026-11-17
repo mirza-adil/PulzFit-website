@@ -1,7 +1,9 @@
 import { useEffect, type ReactNode } from "react";
 import Lenis from "lenis";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
 import { usePrefersReducedMotion } from "@/hooks/usePrefersReducedMotion";
+
+/** Height of the fixed navbar plus breathing room, used when jumping to #anchors. */
+const ANCHOR_OFFSET = -88;
 
 export function SmoothScroll({ children }: { children: ReactNode }) {
   const prefersReduced = usePrefersReducedMotion();
@@ -13,18 +15,12 @@ export function SmoothScroll({ children }: { children: ReactNode }) {
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
+      autoRaf: true,
+      // Let Lenis own in-page anchor clicks so they don't fight native smooth scroll.
+      anchors: { offset: ANCHOR_OFFSET },
     });
 
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const raf = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
-      gsap.ticker.remove(raf);
-      lenis.destroy();
-    };
+    return () => lenis.destroy();
   }, [prefersReduced]);
 
   return <>{children}</>;

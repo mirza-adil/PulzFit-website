@@ -1,19 +1,21 @@
 import { motion } from "framer-motion";
 
+/**
+ * Live-reading chips placed around the product (right half of the hero) so they
+ * never sit on top of the headline, copy or buttons in the left column.
+ * Only shown at lg+, where the two-column layout makes these positions safe.
+ */
 const metrics = [
-  "72 BPM",
-  "98% SpO₂",
-  "68 ms HRV",
-  "36.6°C",
-  "Sleep 88",
-  "118/76",
-  "Calm",
-  "8.6 km",
+  { label: "72 BPM", left: "60%", top: "16%" },
+  { label: "98% SpO₂", left: "83%", top: "20%" },
+  { label: "68 ms HRV", left: "90%", top: "50%" },
+  { label: "Sleep 88", left: "83%", top: "80%" },
+  { label: "36.6°C", left: "58%", top: "84%" },
 ];
 
 export function BiometricBackground() {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       <motion.div
         className="absolute -left-32 top-10 h-[42rem] w-[42rem] rounded-full opacity-70 blur-[120px]"
         style={{
@@ -66,26 +68,23 @@ export function BiometricBackground() {
         </defs>
       </svg>
 
-      {metrics.map((m, i) => {
-        const left = (i * 37) % 90;
-        const top = (i * 53) % 80;
-        return (
-          <motion.div
-            key={m}
-            className="absolute hidden rounded-full border border-border bg-white/90 px-3 py-1.5 text-xs font-medium text-pulz-dark shadow-sm backdrop-blur-md md:block"
-            style={{ left: `${5 + left}%`, top: `${10 + top}%` }}
-            animate={{ y: [0, -12, 0], opacity: [0.6, 1, 0.6] }}
-            transition={{
-              duration: 6 + (i % 4),
-              repeat: Infinity,
-              delay: i * 0.6,
-              ease: "easeInOut",
-            }}
-          >
-            {m}
-          </motion.div>
-        );
-      })}
+      {metrics.map((m, i) => (
+        <motion.div
+          key={m.label}
+          className="absolute hidden rounded-full border border-border bg-white/90 px-3 py-1.5 text-xs font-medium text-pulz-dark shadow-sm backdrop-blur-md lg:block"
+          style={{ left: m.left, top: m.top }}
+          // Gentle float; opacity stays high so the reading never drops below legible contrast
+          animate={{ y: [0, -10, 0], opacity: [0.85, 1, 0.85] }}
+          transition={{
+            duration: 6 + (i % 3),
+            repeat: Infinity,
+            delay: i * 0.7,
+            ease: "easeInOut",
+          }}
+        >
+          {m.label}
+        </motion.div>
+      ))}
     </div>
   );
 }

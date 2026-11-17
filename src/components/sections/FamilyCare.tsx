@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
 import {
   Users,
   Share2,
@@ -41,14 +42,15 @@ const features = [
 
 const members = [
   { initials: "MR", name: "Mom", status: "Resting · 64 BPM", color: "#004225" },
-  { initials: "DD", name: "Dad", status: "Walking · 8.2k steps", color: "#40B794" },
-  { initials: "GR", name: "Grandma", status: "Sleeping · Stable", color: "#93D9C4" },
+  { initials: "DD", name: "Dad", status: "Walking · 8.2k steps", color: pulzPalette.ink },
+  { initials: "GR", name: "Grandma", status: "Sleeping · Stable", color: pulzPalette.ink },
   { initials: "SS", name: "Sister", status: "Workout · 142 BPM", color: pulzPalette.deep },
 ];
 
 export function FamilyCare() {
   return (
-    <section id="family" className="section">
+    <section id="family" className="section isolate">
+      <GlassBackdrop layout="left" />
       <div className="container">
         <SectionHeading
           eyebrow="Family Care"
@@ -87,10 +89,12 @@ export function FamilyCare() {
                   <motion.div
                     key={m.name}
                     className="absolute flex flex-col items-center"
+                    // x/y as motion values so the centring offset survives the scale animation
                     style={{
                       left: `${x}%`,
                       top: `${y}%`,
-                      transform: "translate(-50%, -50%)",
+                      x: "-50%",
+                      y: "-50%",
                     }}
                     initial={{ opacity: 0, scale: 0.5 }}
                     whileInView={{ opacity: 1, scale: 1 }}
@@ -119,7 +123,7 @@ export function FamilyCare() {
               {features.map((f, i) => (
                 <Reveal key={f.title} delay={i * 0.06} direction="left">
                   <div className="group flex items-start gap-4 rounded-2xl border border-pulz-200 bg-pulz-100/50 p-4 transition-colors hover:border-pulz-500/40">
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pulz-accent/10 text-pulz-accent">
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-pulz-accent/10 text-pulz-ink">
                       <f.icon className="h-5 w-5" />
                     </span>
                     <div>
@@ -135,7 +139,7 @@ export function FamilyCare() {
 
             <Reveal delay={0.3}>
               <div className="mt-5 rounded-2xl border border-pulz-accent/20 bg-pulz-accent/[0.06] p-4">
-                <div className="flex items-center gap-2 text-sm font-medium text-pulz-accent">
+                <div className="flex items-center gap-2 text-sm font-medium text-pulz-ink">
                   <Siren className="h-4 w-4" />
                   Emergency alert example
                 </div>

@@ -1,37 +1,34 @@
 import { Instagram, Twitter, Youtube, Linkedin, Mail } from "lucide-react";
 import { Logo } from "./Logo";
+import { CONTACT_EMAIL } from "@/lib/config";
+import { useSectionHref } from "@/lib/route";
 
 const columns = [
   {
     title: "Features",
     links: [
-      { label: "Heart Health", href: "#heart" },
-      { label: "Sleep Intelligence", href: "#sleep" },
-      { label: "AI Health Coach", href: "#ai-coach" },
-      { label: "Sports Tracking", href: "#sports" },
-      { label: "Family Care", href: "#family" },
+      { label: "All features", href: "/features/" },
+      { label: "ECG guide", href: "/features/ecg/" },
+      { label: "Heart Health", section: "heart" },
+      { label: "Sleep Intelligence", section: "sleep" },
+      { label: "AI Health Coach", section: "ai-coach" },
+      { label: "Sports Tracking", section: "sports" },
+      { label: "Family Care", section: "family" },
+      { label: "Fitness Bands", section: "bands" },
     ],
   },
   {
     title: "Support",
     links: [
-      { label: "Help Center", href: "#faq" },
-      { label: "Setup Guide", href: "#faq" },
-      { label: "Warranty", href: "#faq" },
-      { label: "Contact Us", href: "#contact" },
-      { label: "Returns", href: "#pricing" },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      { label: "About", href: "#hero" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "Press Kit", href: "#hero" },
-      { label: "Careers", href: "#hero" },
+      { label: "FAQ", section: "faq" },
+      { label: "Pricing", section: "pricing" },
+      { label: "Contact Us", section: "contact" },
     ],
   },
 ];
+
+/** Social links are hidden until real profile URLs exist: add them below and set this to true. */
+const SHOW_SOCIALS = false;
 
 const socials = [
   { icon: Twitter, label: "Twitter", href: "#" },
@@ -41,17 +38,19 @@ const socials = [
 ];
 
 export function Footer() {
+  const sectionHref = useSectionHref();
   return (
     <footer className="relative border-t border-pulz-200 bg-background">
       <div className="container py-16">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_repeat(3,1fr)]">
+        <div className="grid gap-12 lg:grid-cols-[1.4fr_repeat(2,1fr)]">
           <div className="max-w-sm">
             <Logo />
             <p className="mt-4 text-sm leading-relaxed text-muted-foreground">
-              PulzFit 1 — the next-generation AI health bracelet delivering advanced
+              PulzFit — the next-generation AI health bracelet delivering advanced
               insights, recovery tracking and wellness intelligence through
               continuous monitoring.
             </p>
+            {SHOW_SOCIALS && (
             <div className="mt-6 flex gap-3">
               {socials.map((s) => (
                 <a
@@ -64,6 +63,7 @@ export function Footer() {
                 </a>
               ))}
             </div>
+            )}
           </div>
 
           {columns.map((col) => (
@@ -75,7 +75,7 @@ export function Footer() {
                 {col.links.map((link) => (
                   <li key={link.label}>
                     <a
-                      href={link.href}
+                      href={"href" in link ? link.href : sectionHref(link.section)}
                       className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                     >
                       {link.label}
@@ -87,21 +87,25 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-14 flex flex-col items-start justify-between gap-4 border-t border-pulz-200 pt-8 text-sm text-muted-foreground md:flex-row md:items-center">
-          <p>© {new Date().getFullYear()} PulzFit. All rights reserved.</p>
+        <p className="mt-14 max-w-3xl text-xs leading-relaxed text-muted-foreground">
+          PulzFit is a wellness device. It is not a medical device and is not
+          intended to diagnose, treat, cure or prevent any disease. Health
+          estimates such as blood pressure are for general wellness insight only. Always consult a
+          qualified healthcare professional for medical decisions.
+        </p>
+
+        <div className="mt-8 flex flex-col items-start justify-between gap-4 border-t border-pulz-200 pt-8 text-sm text-muted-foreground md:flex-row md:items-center">
+          <p>
+            © <span suppressHydrationWarning>{new Date().getFullYear()}</span>{" "}
+            PulzFit. All rights reserved.
+          </p>
           <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
-            <a href="#" className="transition-colors hover:text-foreground">
-              Privacy Policy
-            </a>
-            <a href="#" className="transition-colors hover:text-foreground">
-              Terms of Service
-            </a>
             <a
-              href="mailto:hello@pulzfit.com"
+              href={`mailto:${CONTACT_EMAIL}`}
               className="flex items-center gap-1.5 transition-colors hover:text-foreground"
             >
               <Mail className="h-4 w-4" />
-              hello@pulzfit.com
+              {CONTACT_EMAIL}
             </a>
           </div>
         </div>

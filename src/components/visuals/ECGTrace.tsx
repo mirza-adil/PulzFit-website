@@ -15,7 +15,7 @@ const beat =
 
 function buildPath(repeat: number): string {
   const segWidth = 96;
-  let points: string[] = [];
+  const points: string[] = [];
   for (let i = 0; i < repeat; i++) {
     const offset = i * segWidth;
     beat.split(" ").forEach((pt) => {
@@ -64,14 +64,21 @@ export function ECGTrace({
           transition={{ duration: 2, ease: "easeInOut" }}
         />
       </svg>
+      {/* Scan sweep: a full-width track moves so the % offsets span the whole chart
+          (on the band itself, x% would only be % of its own 96px width). */}
       <motion.div
-        className="pointer-events-none absolute inset-y-0 w-24"
-        style={{
-          background: `linear-gradient(90deg, transparent, ${color}33, transparent)`,
-        }}
-        animate={{ x: ["-10%", "100%"] }}
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        animate={{ x: ["-15%", "100%"] }}
         transition={{ duration, repeat: Infinity, ease: "linear" }}
-      />
+      >
+        <div
+          className="h-full w-24"
+          style={{
+            background: `linear-gradient(90deg, transparent, ${pulzPalette.accent}38, transparent)`,
+          }}
+        />
+      </motion.div>
     </div>
   );
 }

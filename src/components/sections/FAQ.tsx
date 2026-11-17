@@ -14,8 +14,8 @@ export function FAQ() {
       <div className="container max-w-3xl">
         <SectionHeading
           eyebrow="FAQ"
-          title="Questions, answered"
-          description="Everything you need to know about PulzFit 1. Can't find an answer? Reach out to our team."
+          title="PulzFit FAQ: questions, answered"
+          description="Everything you need to know about PulzFit. Can't find an answer? Reach out to our team."
         />
 
         <Reveal className="mt-12">

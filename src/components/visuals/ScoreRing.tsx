@@ -21,7 +21,7 @@ export function ScoreRing({
   size = 160,
   stroke = 12,
   color = pulzPalette.dark,
-  trackColor = "rgba(255,255,255,0.08)",
+  trackColor = "rgba(1,50,32,0.08)",
   label,
   sublabel,
   className,

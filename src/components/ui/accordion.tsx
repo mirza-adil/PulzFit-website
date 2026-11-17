@@ -12,7 +12,7 @@ const AccordionItem = React.forwardRef<
   <AccordionPrimitive.Item
     ref={ref}
     className={cn(
-      "rounded-2xl border border-pulz-200 bg-white px-6 transition-colors data-[state=open]:bg-pulz-100/50",
+      "group/item rounded-2xl border border-pulz-200 bg-white px-6 transition-colors data-[state=open]:bg-pulz-100/50",
       className
     )}
     {...props}
@@ -40,16 +40,27 @@ const AccordionTrigger = React.forwardRef<
 ));
 AccordionTrigger.displayName = AccordionPrimitive.Trigger.displayName;
 
+/**
+ * Always mounted (forceMount) so every answer is in the prerendered HTML for
+ * crawlers and matches the FAQPage schema.
+ *
+ * The open/close animation lives on an inner wrapper, driven by the item's
+ * data-state: Radix briefly forces `transition-duration: 0s` on the Content
+ * element itself to measure it, which would cancel a transition placed there.
+ * Grid rows 0fr → 1fr animates height smoothly in both directions; `invisible`
+ * (applied after the close transition) keeps closed answers out of the tab
+ * order and the accessibility tree.
+ */
 const AccordionContent = React.forwardRef<
   React.ElementRef<typeof AccordionPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>
+  Omit<React.ComponentPropsWithoutRef<typeof AccordionPrimitive.Content>, "forceMount">
 >(({ className, children, ...props }, ref) => (
-  <AccordionPrimitive.Content
-    ref={ref}
-    className="overflow-hidden text-sm text-muted-foreground data-[state=closed]:animate-accordion-up data-[state=open]:animate-accordion-down"
-    {...props}
-  >
-    <div className={cn("pb-5 pt-0 leading-relaxed", className)}>{children}</div>
+  <AccordionPrimitive.Content ref={ref} forceMount className="text-sm text-muted-foreground" {...props}>
+    <div className="invisible grid grid-rows-[0fr] opacity-0 transition-[grid-template-rows,opacity,visibility] duration-300 ease-out motion-reduce:transition-none group-data-[state=open]/item:visible group-data-[state=open]/item:grid-rows-[1fr] group-data-[state=open]/item:opacity-100">
+      <div className="min-h-0 overflow-hidden">
+        <div className={cn("pb-5 pt-0 leading-relaxed", className)}>{children}</div>
+      </div>
+    </div>
   </AccordionPrimitive.Content>
 ));
 AccordionContent.displayName = AccordionPrimitive.Content.displayName;

@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
 import {
   Sparkles,
   Moon,
@@ -10,6 +11,7 @@ import {
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
 import { ScoreRing } from "@/components/visuals/ScoreRing";
+import { pulzPalette } from "@/lib/theme";
 
 const capabilities = [
   {
@@ -61,7 +63,8 @@ const chat = [
 
 export function AICoach() {
   return (
-    <section id="ai-coach" className="section">
+    <section id="ai-coach" className="section isolate">
+      <GlassBackdrop layout="split" />
       <div className="container">
         <SectionHeading
           eyebrow="AI Health Coach"
@@ -71,7 +74,7 @@ export function AICoach() {
               <span className="text-gradient-brand">wellness intelligence</span>
             </>
           }
-          description="PulzFit's AI continuously interprets your data and turns it into clear, personalized guidance — like having a coach, sleep scientist and cardiologist on your wrist."
+          description="PulzFit's AI Health Coach turns your sleep, HRV, activity and stress data into clear, personalized recommendations for recovery, sleep and stress — every day, in the PulzFit app."
         />
 
         <div className="mt-16 grid items-start gap-8 lg:grid-cols-2">
@@ -86,14 +89,14 @@ export function AICoach() {
                   </div>
                   <div>
                     <p className="text-sm font-semibold">PulzFit Coach</p>
-                    <p className="text-xs text-pulz-500">Online · analyzing</p>
+                    <p className="text-xs text-pulz-ink">Online · analyzing</p>
                   </div>
                 </div>
                 <ScoreRing
                   value={92}
                   size={72}
                   stroke={7}
-                  color="#93D9C4"
+                  color={pulzPalette.accent}
                   label="92"
                   sublabel="ready"
                 />
@@ -120,9 +123,9 @@ export function AICoach() {
 
               <div className="mt-5 grid grid-cols-3 gap-3">
                 {[
-                  { label: "Recovery", value: "92%", c: "#93D9C4" },
+                  { label: "Recovery", value: "92%", c: pulzPalette.ink },
                   { label: "Sleep", value: "88", c: "#004225" },
-                  { label: "Stress", value: "Low", c: "#40B794" },
+                  { label: "Stress", value: "Low", c: pulzPalette.ink },
                 ].map((s) => (
                   <div
                     key={s.label}
@@ -148,7 +151,7 @@ export function AICoach() {
             {capabilities.map((c, i) => (
               <Reveal key={c.title} delay={i * 0.06}>
                 <div className="group glass h-full rounded-2xl p-5 transition-colors hover:border-pulz-accent/30">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pulz-accent/15 text-pulz-accent transition-transform group-hover:scale-110">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-pulz-accent/15 text-pulz-ink transition-transform group-hover:scale-110">
                     <c.icon className="h-5 w-5" />
                   </div>
                   <h3 className="mt-4 text-sm font-semibold">{c.title}</h3>

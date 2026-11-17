@@ -3,6 +3,7 @@ import { healthFeatures } from "@/data/features";
 import { MiniViz } from "@/components/visuals/MiniViz";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { StaggerGroup, staggerItem } from "@/components/motion/Reveal";
+import { textColorFor } from "@/lib/theme";
 
 export function Features() {
   return (
@@ -16,7 +17,7 @@ export function Features() {
               <span className="text-gradient-brand">one bracelet</span>
             </>
           }
-          description="PulzFit 1 packs a full lab of medical-grade sensors into a featherweight band — tracking 17+ dimensions of your health, continuously and effortlessly."
+          description="PulzFit packs precision sensors into a featherweight band — tracking ECG, heart rate, HRV, SpO₂, skin temperature, blood-pressure estimates, stress and sleep, continuously and effortlessly."
         />
 
         <StaggerGroup
@@ -41,7 +42,7 @@ export function Features() {
                   className="flex h-12 w-12 items-center justify-center rounded-xl border border-pulz-200 bg-pulz-100/50"
                   style={{
                     background: `${feature.accent}1a`,
-                    color: feature.accent,
+                    color: textColorFor(feature.accent),
                   }}
                 >
                   <feature.icon className="h-6 w-6" />
@@ -49,7 +50,7 @@ export function Features() {
                 {feature.metric && (
                   <span
                     className="rounded-full border border-pulz-200 bg-pulz-100 px-3 py-1 text-xs font-medium text-pulz-700"
-                    style={{ color: feature.accent }}
+                    style={{ color: textColorFor(feature.accent) }}
                   >
                     {feature.metric}
                   </span>

@@ -1,0 +1,193 @@
+{
+  "meta": {
+    "domain": "www.pulzfit.com",
+    "audit_date": "2026-11-15",
+    "scope": "Live site (5 Nov 2026 build) and local production build (3 pages, ready to deploy)",
+    "data_sources": [
+      "Crawl of local build (http://127.0.0.1:4173, 3 pages, 17 assets)",
+      "curl/OpenSSL checks of the live site",
+      "Lighthouse 12.6.1 mobile and desktop lab runs (Google Analytics blocked during testing)",
+      "Web search for brand mentions"
+    ],
+    "not_measured": [
+      "Real-user Core Web Vitals (CrUX): no Google API credentials configured",
+      "Search Console indexation and queries: no credentials configured",
+      "GA4 organic traffic: no credentials configured",
+      "Backlink metrics: no Moz/Bing/DataForSEO credentials",
+      "Lighthouse Agentic Browsing category: not available in Lighthouse 12.6.1"
+    ]
+  },
+  "summary": {
+    "health_score": 74,
+    "health_score_live": 50,
+    "health_score_projected_after_deploy": 80,
+    "business_type": "Pre-launch direct-to-consumer hardware (wearable health bracelet), pre-order e-commerce, EU/EUR",
+    "top_findings": [
+      "Live site is still the 5 Nov build: non-www canonical/sitemap, duplicate https://pulzfit.com (200), FAQ answers missing from HTML, Product-only schema",
+      "Server: no JS/CSS compression, no asset caching, HTTP/1.1, no security headers (Nginx changes drafted, awaiting SSH access)",
+      "Weak trust signals for a health product: no About/team, no Privacy Policy or Terms (GA4 runs for EU visitors), no source for accuracy claims",
+      "No third-party brand presence found (no reviews, press, social profiles, video)",
+      "Mobile LCP 3.5-3.8 s in lab on the local build (8.2 s on live); target 2.5 s"
+    ],
+    "quick_wins": [
+      "Deploy the local build (fixes canonical, schema, FAQ visibility, images, fonts, LCP animation)",
+      "Apply the Nginx draft: apex 301 to www, gzip, cache headers, HTTP/2, security headers",
+      "Resubmit sitemap in Search Console and request indexing for the 3 URLs",
+      "Import the site into Bing Webmaster Tools from Search Console",
+      "Publish Privacy Policy and Terms pages (text needed from you)"
+    ]
+  },
+  "categories": [
+    {
+      "name": "Technical SEO",
+      "weight": 0.22,
+      "score": 70,
+      "score_live": 55,
+      "what_works": [
+        "Prerendered static HTML: all content, title, canonical and JSON-LD present without JavaScript",
+        "robots.txt allows all crawlers; sitemap lists 3 pages with per-page lastmod (local build)",
+        "Self-referencing www canonicals on all pages (local build)",
+        "HTTPS with valid Let's Encrypt cert for apex + www until 3 Feb 2027; TLS 1.2/1.3",
+        "http to https://www redirect is a single 301; real 404s for unknown URLs",
+        "No back-button hijacking (no history.pushState/replaceState); no mixed content",
+        "Multi-page prerender with noindex support and per-route metadata"
+      ],
+      "findings": [
+        {"title": "https://pulzfit.com serves a duplicate of the site (200)", "severity": "Critical", "description": "Live: apex HTTPS returns 200 with identical content; live canonical and sitemap point to the apex, opposite to the www plan.", "recommendation": "Deploy the local build (www canonical) and add the apex-to-www 301 in Nginx."},
+        {"title": "JS/CSS served uncompressed; no cache headers on hashed assets", "severity": "High", "description": "Only HTML is gzipped. Lighthouse estimates 475 KiB compression savings and 888 KiB cache savings on live.", "recommendation": "gzip_types for JS/CSS/SVG/JSON; Cache-Control immutable for /assets/."},
+        {"title": "HTTP/1.1 only", "severity": "High", "description": "All requests negotiate HTTP/1.1.", "recommendation": "listen 443 ssl http2 on the PulzFit server block."},
+        {"title": "No security headers; Nginx version exposed", "severity": "High", "description": "No HSTS, X-Content-Type-Options, X-Frame-Options, Referrer-Policy; Server: nginx/1.18.0 (Ubuntu) in headers and error pages.", "recommendation": "Add headers (no CSP yet, so GA4/Firebase are unaffected) and server_tokens off."},
+        {"title": "/index.html duplicates /", "severity": "Medium", "description": "Returns 200; canonical mitigates.", "recommendation": "Redirect via $request_uri match (draft avoids a redirect loop)."},
+        {"title": "Ubuntu 20.04 / Nginx 1.18 past standard support", "severity": "Medium", "description": "Affects the whole VPS including FioraHouse.", "recommendation": "Confirm ESM security updates or plan an OS upgrade."},
+        {"title": "IndexNow not implemented", "severity": "Low", "description": "Bing/Yandex/Naver discovery is slower.", "recommendation": "Add a key file and ping on deploy."}
+      ]
+    },
+    {
+      "name": "Content Quality",
+      "weight": 0.23,
+      "score": 62,
+      "score_live": 45,
+      "what_works": [
+        "Homepage 1,444 words; ECG guide 784 words; features hub 454 words; all >= 67% unique vs each other",
+        "109-word 'What is PulzFit?' answer block at 5% of the homepage plus an 11-row specs table",
+        "ECG guide states limits clearly (cannot detect heart attack, not continuous, not a diagnosis)",
+        "Readability around Flesch 51 / US grade 8 on the homepage",
+        "Overclaiming removed ('medical-grade', '17+ dimensions', 'cardiologist' comparison)"
+      ],
+      "findings": [
+        {"title": "No About/team page or named experts", "severity": "High", "description": "Health (YMYL) product with anonymous authorship.", "recommendation": "About page with founders and any clinical/engineering advisors; Person schema."},
+        {"title": "No Privacy Policy or Terms", "severity": "High", "description": "GA4 via Firebase runs for EU visitors; legal and trust requirement.", "recommendation": "Publish both pages (text needed), add footer links, consider cookie consent."},
+        {"title": "Accuracy claims unsourced", "severity": "Medium", "description": "FAQ claims +/-2 BPM and +/-2% SpO2 without method or reference device.", "recommendation": "Add a validation summary (method, reference device, sample, date)."},
+        {"title": "ECG guide medical wording needs expert review", "severity": "Medium", "description": "General ECG statements are conservative but should be checked; app-flow details need confirming.", "recommendation": "Review by a qualified person before deploy."}
+      ]
+    },
+    {
+      "name": "On-Page SEO",
+      "weight": 0.20,
+      "score": 90,
+      "score_live": 60,
+      "what_works": [
+        "Unique titles 44-54 chars and descriptions 151-156 chars on all 3 pages",
+        "Exactly one H1 per page; no skipped heading levels",
+        "Keyword-bearing H2s (Sleep tracking, ECG and HRV, PulzFit FAQ, What is PulzFit?)",
+        "Each page linked from both other pages; breadcrumbs on inner pages",
+        "No dead or misleading footer links"
+      ],
+      "findings": [
+        {"title": "Two titles under 50 characters", "severity": "Low", "description": "/features/ (46) and /features/ecg/ (44).", "recommendation": "Optional: extend, e.g. 'PulzFit ECG: Single-Lead Heart Rhythm Checks on Your Wrist'."},
+        {"title": "No outbound links to authoritative sources", "severity": "Low", "description": "Health guide cites no external references.", "recommendation": "Link to a reputable explainer on ECG/arrhythmia once reviewed."}
+      ]
+    },
+    {
+      "name": "Schema / Structured Data",
+      "weight": 0.10,
+      "score": 85,
+      "score_live": 40,
+      "what_works": [
+        "Homepage: Organization (contactPoint), WebPage, WebSite, Product (+9 additionalProperty specs, PreOrder Offer), FAQPage",
+        "Inner pages: WebPage + BreadcrumbList; ECG adds FAQPage matching visible text",
+        "All absolute URLs, resolved @id references, JSON-LD in initial HTML"
+      ],
+      "findings": [
+        {"title": "Product lacks shippingDetails / hasMerchantReturnPolicy / GTIN", "severity": "Medium", "description": "Recommended for merchant listings.", "recommendation": "Fill from real policy; template in docs/seo/generated-schema.json."},
+        {"title": "No Organization sameAs", "severity": "Low", "description": "No social profiles exist yet.", "recommendation": "Add once profiles exist."},
+        {"title": "Live site has Product only, apex URLs", "severity": "High", "description": "Fixed in local build.", "recommendation": "Deploy."}
+      ]
+    },
+    {
+      "name": "Performance (CWV)",
+      "weight": 0.10,
+      "score": 70,
+      "score_live": 40,
+      "what_works": [
+        "Desktop lab: performance 100, LCP 0.7 s, CLS 0.001",
+        "CLS <= 0.02 and TBT <= 10 ms on all pages",
+        "Hero entrance is CSS (visible on first paint); fonts self-hosted; WebP images"
+      ],
+      "findings": [
+        {"title": "Mobile lab LCP 3.5-3.8 s (local), 8.2 s (live)", "severity": "High", "description": "Local preview has no compression; live lacks compression/HTTP2/caching. Real-user data not measured.", "recommendation": "Deploy + Nginx changes, then re-measure; consider responsive srcset for the hero."},
+        {"title": "~120 KiB unused JavaScript", "severity": "Medium", "description": "Mostly Framer Motion on below-the-fold sections.", "recommendation": "Lazy-load below-the-fold animation code."}
+      ]
+    },
+    {
+      "name": "AI Search Readiness",
+      "weight": 0.10,
+      "score": 62,
+      "score_live": 45,
+      "what_works": [
+        "All AI search crawlers (OAI-SearchBot, Claude-SearchBot, PerplexityBot, Googlebot, Applebot, bingbot) allowed and served 200",
+        "Self-contained answer block and specs table high on the page",
+        "llms.txt generated (no ranking weight)"
+      ],
+      "findings": [
+        {"title": "No third-party brand mentions found", "severity": "High", "description": "No press, reviews, Reddit, YouTube or social presence.", "recommendation": "LinkedIn page, YouTube walkthrough, launch press kit, reviewer units."}
+      ]
+    },
+    {
+      "name": "Images",
+      "weight": 0.05,
+      "score": 92,
+      "score_live": 70,
+      "what_works": [
+        "All content images WebP, 29-104 KB, with width/height",
+        "Hero preloaded with fetchpriority=high; others lazy-loaded",
+        "1200x630 social image, favicon.ico, apple-touch-icon"
+      ],
+      "findings": [
+        {"title": "3 inactive carousel images have empty alt", "severity": "Low", "description": "Intentional for hidden slides.", "recommendation": "Optional: descriptive alt plus aria-hidden on inactive slides."}
+      ]
+    }
+  ],
+  "action_plan": {
+    "phases": [
+      {"name": "Phase 1: Critical Fixes", "timeframe": "Week 1", "items": [
+        "Authorise SSH key, then deploy dist/ with backup",
+        "Apply Nginx draft after nginx -t: apex 301, gzip, caching, HTTP/2, security headers, /index.html redirect",
+        "Verify live: canonical, sitemap, 3 pages, headers, FioraHouse unaffected, GA4 page views",
+        "Search Console: resubmit sitemap, request indexing for /, /features/, /features/ecg/"
+      ]},
+      {"name": "Phase 2: High-Impact Improvements", "timeframe": "Weeks 2-3", "items": [
+        "Privacy Policy and Terms pages (your text)",
+        "About page with founders and Person schema",
+        "Expert review of ECG guide wording",
+        "Validation source for accuracy claims",
+        "Shipping/returns/GTIN in Product schema"
+      ]},
+      {"name": "Phase 3: Content & Authority", "timeframe": "Month 2", "items": [
+        "Next feature guides: sleep tracking, HRV, SpO2, family care",
+        "LinkedIn company page, YouTube walkthrough, sameAs links",
+        "Launch press kit and reviewer outreach",
+        "Bing Webmaster Tools + IndexNow"
+      ]},
+      {"name": "Phase 4: Monitoring & Iteration", "timeframe": "Ongoing", "items": [
+        "Configure Google API credentials for CrUX/GSC/GA4 data",
+        "Monthly: indexed pages vs sitemap, CWV, GSC queries",
+        "Quarterly: re-verify specs, prices and claims; update page dates"
+      ]}
+    ]
+  },
+  "artifacts": {
+    "findings_dir": "findings/",
+    "screenshots_dir": "screenshots/"
+  }
+}

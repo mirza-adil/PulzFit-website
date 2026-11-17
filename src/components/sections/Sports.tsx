@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
 import { ActivityRings } from "@/components/visuals/ActivityRings";
@@ -8,7 +9,8 @@ import { pulzPalette } from "@/lib/theme";
 
 export function Sports() {
   return (
-    <section id="sports" className="section overflow-hidden">
+    <section id="sports" className="section isolate overflow-hidden">
+      <GlassBackdrop layout="left" />
       <div className="container">
         <SectionHeading
           eyebrow="Sports & Fitness"
@@ -79,7 +81,7 @@ export function Sports() {
                   </p>
                   <p className="text-sm font-medium">Ready for next session</p>
                 </div>
-                <span className="font-display text-2xl font-bold text-pulz-500">
+                <span className="font-display text-2xl font-bold text-pulz-ink">
                   <Counter to={92} suffix="%" />
                 </span>
               </div>
@@ -104,7 +106,7 @@ export function Sports() {
                   whileHover={{ y: -4, scale: 1.03 }}
                   className="group flex items-center gap-3 rounded-2xl border border-pulz-200 bg-pulz-100/50 px-4 py-3 transition-colors hover:border-pulz-500/40"
                 >
-                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pulz-accent/10 text-pulz-accent transition-transform group-hover:scale-110">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-pulz-accent/10 text-pulz-ink transition-transform group-hover:scale-110">
                     <sport.icon className="h-4 w-4" />
                   </span>
                   <span className="text-sm font-medium">{sport.name}</span>

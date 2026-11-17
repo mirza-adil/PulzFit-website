@@ -1,4 +1,4 @@
-import { Check, Sparkles, X } from "lucide-react";
+import { Check, Sparkles } from "lucide-react";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/button";
@@ -6,9 +6,9 @@ import { Magnetic } from "@/components/motion/Magnetic";
 import {
   pricingPlans,
   productPrice,
-  comparisonRows,
 } from "@/data/pricing";
 import { cn } from "@/lib/utils";
+import { linkProps, planHref } from "@/lib/config";
 
 export function Pricing() {
   return (
@@ -26,9 +26,9 @@ export function Pricing() {
           }
           description={
             <>
-              Get the PulzFit 1 bracelet for a one-time{" "}
+              Get the PulzFit bracelet for a one-time{" "}
               <span className="font-semibold text-pulz-900">
-                ${productPrice}
+                €{productPrice}
               </span>
               , then pick the plan that fits your goals. Cancel anytime.
             </>
@@ -59,7 +59,7 @@ export function Pricing() {
                 </p>
                 <div className="mt-6 flex items-baseline gap-1">
                   <span className="font-display text-4xl font-extrabold text-pulz-900">
-                    {plan.price === 0 ? "Free" : `$${plan.price}`}
+                    {plan.price === 0 ? "Free" : `€${plan.price}`}
                   </span>
                   {plan.price > 0 && (
                     <span className="text-sm text-muted-foreground">
@@ -88,20 +88,19 @@ export function Pricing() {
                   {plan.highlight ? (
                     <Magnetic>
                       <Button variant="gradient" className="w-full" asChild>
-                        <a href="#contact">
+                        <a {...linkProps(planHref(plan.id))}>
                           <Sparkles className="h-4 w-4" />
                           {plan.cta}
                         </a>
                       </Button>
                     </Magnetic>
+                  ) : plan.price === 0 ? (
+                    <Button variant="outline" className="w-full" disabled>
+                      {plan.cta}
+                    </Button>
                   ) : (
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      asChild
-                      disabled={plan.cta === "Included"}
-                    >
-                      <a href="#contact">{plan.cta}</a>
+                    <Button variant="outline" className="w-full" asChild>
+                      <a {...linkProps(planHref(plan.id))}>{plan.cta}</a>
                     </Button>
                   )}
                 </div>
@@ -110,36 +109,6 @@ export function Pricing() {
           ))}
         </div>
 
-        <Reveal>
-          <div className="mt-10 overflow-hidden rounded-2xl border border-pulz-200 bg-white shadow-card">
-            <div className="grid grid-cols-3 border-b border-pulz-200 bg-pulz-100/60 px-6 py-4 text-sm font-semibold text-pulz-900">
-              <span>Capability</span>
-              <span className="text-center text-pulz-700">PulzFit 1</span>
-              <span className="text-center text-muted-foreground">Others</span>
-            </div>
-            {comparisonRows.map((row, i) => (
-              <div
-                key={row.capability}
-                className={cn(
-                  "grid grid-cols-3 px-6 py-4 text-sm",
-                  i % 2 === 1 && "bg-pulz-100/40"
-                )}
-              >
-                <span className="text-foreground/90">{row.capability}</span>
-                <span className="flex items-center justify-center gap-1.5 font-medium text-pulz-700">
-                  <Check className="h-4 w-4 text-pulz-600" />
-                  {row.pulzfit}
-                </span>
-                <span className="flex items-center justify-center gap-1.5 text-muted-foreground">
-                  {row.others === "No" ? (
-                    <X className="h-4 w-4 text-muted-foreground" />
-                  ) : null}
-                  {row.others}
-                </span>
-              </div>
-            ))}
-          </div>
-        </Reveal>
       </div>
     </section>
   );

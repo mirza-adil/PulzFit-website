@@ -63,18 +63,3 @@ export const pricingPlans: PricingPlan[] = [
     cta: "Choose Family",
   },
 ];
-
-export interface ComparisonRow {
-  capability: string;
-  pulzfit: string;
-  others: string;
-}
-
-export const comparisonRows: ComparisonRow[] = [
-  { capability: "Continuous ECG", pulzfit: "Yes", others: "Rare" },
-  { capability: "Non-invasive glucose trend", pulzfit: "Yes", others: "No" },
-  { capability: "Battery life", pulzfit: "7 days", others: "1–3 days" },
-  { capability: "AI Health Coach", pulzfit: "Built-in", others: "Add-on" },
-  { capability: "Remote family care", pulzfit: "Yes", others: "Limited" },
-  { capability: "Water resistance", pulzfit: "100m", others: "50m" },
-];

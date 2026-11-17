@@ -1,9 +1,11 @@
 import { cn } from "@/lib/utils";
+import { usePath } from "@/lib/route";
 
 export function Logo({ className }: { className?: string }) {
+  const path = usePath();
   return (
     <a
-      href="#hero"
+      href={path === "/" ? "#hero" : "/"}
       className={cn("flex items-center gap-2.5", className)}
       aria-label="PulzFit home"
     >

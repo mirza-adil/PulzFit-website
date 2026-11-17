@@ -1,5 +1,6 @@
 import { Activity, Heart, HeartPulse, Sparkles } from "lucide-react";
-import { pulzPalette } from "@/lib/theme";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
+import { pulzPalette, textColorFor } from "@/lib/theme";
 import { SectionHeading } from "@/components/layout/SectionHeading";
 import { Reveal } from "@/components/motion/Reveal";
 import { ECGTrace } from "@/components/visuals/ECGTrace";
@@ -41,7 +42,8 @@ const recommendations = [
 
 export function HeartHealth() {
   return (
-    <section id="heart" className="section">
+    <section id="heart" className="section isolate">
+      <GlassBackdrop layout="split" />
       {/* ambient glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/4 -z-10 h-96 w-96 -translate-x-1/2 rounded-full bg-pulz-deep/10 blur-[120px]" />
 
@@ -50,11 +52,22 @@ export function HeartHealth() {
           eyebrow="Heart Health"
           title={
             <>
-              A medical-grade view of{" "}
+              ECG and HRV: a deeper view of{" "}
               <span className="text-gradient-brand">your heart</span>
             </>
           }
-          description="On-demand ECG, continuous heart rate and HRV analysis combine into a clear picture of cardiovascular wellness — with guidance you can act on."
+          description={
+            <>
+              On-demand ECG, continuous heart rate and HRV analysis combine into a clear picture
+              of cardiovascular wellness — with guidance you can act on.{" "}
+              <a
+                href="/features/ecg/"
+                className="font-medium text-pulz-ink underline decoration-pulz-300 underline-offset-4 hover:decoration-pulz-ink"
+              >
+                How PulzFit's ECG works
+              </a>
+            </>
+          }
         />
 
         <div className="mt-16 grid gap-6 lg:grid-cols-3">
@@ -73,7 +86,7 @@ export function HeartHealth() {
                     </p>
                   </div>
                 </div>
-                <span className="rounded-full border border-pulz-500/30 bg-pulz-500/10 px-3 py-1 text-xs font-medium text-pulz-500">
+                <span className="rounded-full border border-pulz-500/30 bg-pulz-500/10 px-3 py-1 text-xs font-medium text-pulz-ink">
                   Normal Sinus Rhythm
                 </span>
               </div>
@@ -92,7 +105,7 @@ export function HeartHealth() {
           <Reveal direction="left">
             <div className="glass h-full rounded-3xl p-6">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-4 w-4 text-pulz-accent" />
+                <Sparkles className="h-4 w-4 text-pulz-ink" />
                 <p className="text-sm font-medium">Wellness Recommendations</p>
               </div>
               <ul className="mt-5 space-y-4">
@@ -124,7 +137,7 @@ export function HeartHealth() {
                 <div className="flex items-center justify-between">
                   <span
                     className="flex h-10 w-10 items-center justify-center rounded-xl"
-                    style={{ background: `${v.color}1a`, color: v.color }}
+                    style={{ background: `${v.color}1a`, color: textColorFor(v.color) }}
                   >
                     <v.icon className="h-5 w-5" />
                   </span>

@@ -1,61 +1,32 @@
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Hero } from "@/components/sections/Hero";
-import { Features } from "@/components/sections/Features";
-import { Sleep } from "@/components/sections/Sleep";
-import { HeartHealth } from "@/components/sections/HeartHealth";
-import { AICoach } from "@/components/sections/AICoach";
-import { Sports } from "@/components/sections/Sports";
-import { FamilyCare } from "@/components/sections/FamilyCare";
-import { Pricing } from "@/components/sections/Pricing";
-import { FAQ } from "@/components/sections/FAQ";
-import { ContactCTA } from "@/components/sections/ContactCTA";
-import { useSeo } from "@/hooks/useSeo";
+import { StickyCTA } from "@/components/layout/StickyCTA";
+import { PathProvider } from "@/lib/route";
+import { findRoute } from "@/routes";
 
-function App() {
-  useSeo({
-    title: "PulzFit 1 — The Most Advanced AI Health Bracelet",
-    description:
-      "PulzFit 1 is the next-generation AI health bracelet delivering advanced health insights, recovery tracking, and wellness intelligence through continuous monitoring. Know Your Body. Improve Your Life.",
-    jsonLd: {
-      "@context": "https://schema.org",
-      "@type": "Product",
-      name: "PulzFit 1",
-      description:
-        "The most advanced AI health bracelet for complete wellness monitoring.",
-      brand: { "@type": "Brand", name: "PulzFit" },
-      offers: {
-        "@type": "Offer",
-        price: "349",
-        priceCurrency: "USD",
-        availability: "https://schema.org/InStock",
-      },
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.9",
-        reviewCount: "5000",
-      },
-    },
-  });
+function App({ path }: { path: string }) {
+  const route = findRoute(path);
+  const Page = route.Component;
 
   return (
-    <SmoothScroll>
-      <Navbar />
-      <main>
-        <Hero />
-        <Features />
-        <Sleep />
-        <HeartHealth />
-        <AICoach />
-        <Sports />
-        <FamilyCare />
-        <Pricing />
-        <FAQ />
-        <ContactCTA />
-      </main>
-      <Footer />
-    </SmoothScroll>
+    <PathProvider path={route.path}>
+      <SmoothScroll>
+        <a
+          href="#main"
+          onClick={() => document.getElementById("main")?.focus({ preventScroll: true })}
+          className="sr-only z-[60] rounded-full bg-pulz-900 px-5 py-3 text-sm font-semibold text-white focus:not-sr-only focus:fixed focus:left-4 focus:top-4"
+        >
+          Skip to content
+        </a>
+        <Navbar />
+        <main id="main" tabIndex={-1} className="outline-none">
+          <Page />
+        </main>
+        <Footer />
+        {route.path === "/" && <StickyCTA />}
+      </SmoothScroll>
+    </PathProvider>
   );
 }
 

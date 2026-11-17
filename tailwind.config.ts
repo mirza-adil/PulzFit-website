@@ -44,6 +44,8 @@ const config: Config = {
           deep: "#013220",
           dark: "#004225",
           accent: "#40B794",
+          // accessible accent for text & icons (≥4.5:1 on all page surfaces)
+          ink: "#1E7259",
           light: "#93D9C4",
           surface: "#EDF8F4",
           white: "#FFFFFF",
@@ -117,6 +119,20 @@ const config: Config = {
           "0%": { transform: "scale(0.8)", opacity: "0.7" },
           "100%": { transform: "scale(2.4)", opacity: "0" },
         },
+        // Hero entrance. Pure CSS so it starts on first paint, not after hydration.
+        // LCP candidates (H1, intro, product) move but never start at opacity 0.
+        "hero-rise": {
+          from: { transform: "translateY(24px)" },
+          to: { transform: "translateY(0)" },
+        },
+        "hero-fade-up": {
+          from: { opacity: "0", transform: "translateY(20px)" },
+          to: { opacity: "1", transform: "translateY(0)" },
+        },
+        "hero-pop": {
+          from: { transform: "translateY(32px) scale(0.96)" },
+          to: { transform: "translateY(0) scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -124,6 +140,9 @@ const config: Config = {
         float: "float 6s ease-in-out infinite",
         marquee: "marquee 40s linear infinite",
         "pulse-ring": "pulse-ring 2.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite",
+        "hero-rise": "hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "hero-fade-up": "hero-fade-up 0.6s cubic-bezier(0.22, 1, 0.36, 1) both",
+        "hero-pop": "hero-pop 0.9s cubic-bezier(0.22, 1, 0.36, 1) both",
       },
     },
   },

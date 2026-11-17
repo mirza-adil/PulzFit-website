@@ -1,0 +1,40 @@
+{
+  "_notes": [
+    "Additions to the existing @graph in src/seo.ts (siteJsonLd). Merge into the matching nodes; do not add a second Product.",
+    "Every <ANGLE-BRACKET> value is a placeholder. Fill it with real data, or delete that property. Never publish placeholders.",
+    "Remove this _notes key before use."
+  ],
+
+  "organization_additions": {
+    "@id": "https://www.pulzfit.com/#organization",
+    "sameAs": ["<https://www.instagram.com/...>", "<https://www.linkedin.com/company/...>"]
+  },
+
+  "product_additions": {
+    "@id": "https://www.pulzfit.com/#product",
+    "sku": "<PULZFIT-SKU>",
+    "gtin13": "<13-digit EAN>"
+  },
+
+  "offer_additions": {
+    "availabilityStarts": "<YYYY-MM-DD launch/shipping date>",
+    "shippingDetails": {
+      "@type": "OfferShippingDetails",
+      "shippingDestination": { "@type": "DefinedRegion", "addressCountry": "<FI>" },
+      "shippingRate": { "@type": "MonetaryAmount", "value": "<0>", "currency": "EUR" },
+      "deliveryTime": {
+        "@type": "ShippingDeliveryTime",
+        "handlingTime": { "@type": "QuantitativeValue", "minValue": "<0>", "maxValue": "<2>", "unitCode": "DAY" },
+        "transitTime": { "@type": "QuantitativeValue", "minValue": "<1>", "maxValue": "<5>", "unitCode": "DAY" }
+      }
+    },
+    "hasMerchantReturnPolicy": {
+      "@type": "MerchantReturnPolicy",
+      "applicableCountry": "<FI>",
+      "returnPolicyCategory": "https://schema.org/MerchantReturnFiniteReturnWindow",
+      "merchantReturnDays": "<30>",
+      "returnMethod": "https://schema.org/ReturnByMail",
+      "returnFees": "<https://schema.org/FreeReturn>"
+    }
+  }
+}

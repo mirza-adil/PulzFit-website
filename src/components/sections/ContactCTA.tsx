@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { GlassBackdrop } from "@/components/visuals/GlassBackdrop";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import { z } from "zod";
@@ -9,20 +10,42 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { CONTACT_EMAIL, CONTACT_ENDPOINT } from "@/lib/config";
+import { trackEvent } from "@/lib/analytics";
 
 const schema = z.object({
   name: z.string().min(2, "Please enter your name"),
   email: z.string().email("Enter a valid email address"),
-  message: z.string().min(10, "Tell us a little more (10+ characters)"),
+  // Optional: joining the waitlist shouldn't require writing a message
+  message: z.string().trim().max(1000, "Please keep your message under 1000 characters"),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-// Mock async submission to demonstrate React Query mutation wiring.
-async function submitContact(values: FormValues): Promise<{ ok: boolean }> {
-  await new Promise((resolve) => setTimeout(resolve, 1200));
-  if (!values.email) throw new Error("Submission failed");
-  return { ok: true };
+type SubmitResult = { via: "api" | "email" };
+
+/**
+ * Sends the message to VITE_CONTACT_ENDPOINT (JSON POST, Formspree-compatible).
+ * Without an endpoint, opens the visitor's email client with the message pre-filled
+ * so nothing is silently lost.
+ */
+async function submitContact(values: FormValues): Promise<SubmitResult> {
+  if (!CONTACT_ENDPOINT) {
+    const subject = encodeURIComponent(`PulzFit waitlist: ${values.name}`);
+    const body = encodeURIComponent(
+      `${values.message || "Please add me to the PulzFit waitlist."}\n\n— ${values.name} (${values.email})`
+    );
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+    return { via: "email" };
+  }
+
+  const res = await fetch(CONTACT_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
+    body: JSON.stringify(values),
+  });
+  if (!res.ok) throw new Error(`Submission failed (${res.status})`);
+  return { via: "api" };
 }
 
 export function ContactCTA() {
@@ -38,7 +61,11 @@ export function ContactCTA() {
 
   const mutation = useMutation({
     mutationFn: submitContact,
-    onSuccess: () => reset(),
+    onSuccess: (result) => {
+      // GA4 recommended event for a waitlist sign-up (no personal data sent)
+      trackEvent("generate_lead", { method: result.via });
+      reset();
+    },
   });
 
   const onSubmit = (values: FormValues) => mutation.mutate(values);
@@ -46,7 +73,8 @@ export function ContactCTA() {
   return (
     <section id="contact" className="section">
       <div className="container">
-        <div className="relative overflow-hidden rounded-2xl border border-pulz-200 bg-gradient-to-br from-pulz-100 via-white to-pulz-100/50 p-8 shadow-card md:p-14">
+        <div className="relative isolate overflow-hidden rounded-2xl border border-pulz-200 bg-gradient-to-br from-pulz-100 via-white to-pulz-100/50 p-8 shadow-card md:p-14">
+          <GlassBackdrop layout="right" />
           <div className="pointer-events-none absolute -right-20 -top-20 h-72 w-72 rounded-full bg-pulz-500/15 blur-3xl" />
           <div className="pointer-events-none absolute -bottom-20 -left-20 h-72 w-72 rounded-full bg-pulz-400/10 blur-3xl" />
 
@@ -76,7 +104,7 @@ export function ContactCTA() {
                         key={item}
                         className="flex items-center gap-2 text-muted-foreground"
                       >
-                        <CheckCircle2 className="h-4 w-4 text-pulz-500" />
+                        <CheckCircle2 className="h-4 w-4 text-pulz-ink" />
                         {item}
                       </span>
                     )
@@ -99,15 +127,19 @@ export function ContactCTA() {
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
                         transition={{ type: "spring", stiffness: 200 }}
-                        className="flex h-16 w-16 items-center justify-center rounded-full bg-pulz-500/15 text-pulz-500"
+                        className="flex h-16 w-16 items-center justify-center rounded-full bg-pulz-500/15 text-pulz-ink"
                       >
                         <CheckCircle2 className="h-8 w-8" />
                       </motion.div>
                       <h3 className="mt-5 font-display text-xl font-bold">
-                        You're on the list!
+                        {mutation.data?.via === "email"
+                          ? "Almost there!"
+                          : "Message sent!"}
                       </h3>
                       <p className="mt-2 text-sm text-muted-foreground">
-                        Thanks for reaching out. We'll be in touch shortly.
+                        {mutation.data?.via === "email"
+                          ? `Your email app should have opened with your message — just hit send. Or write to us at ${CONTACT_EMAIL}.`
+                          : "Thanks for reaching out. We'll be in touch shortly."}
                       </p>
                       <Button
                         variant="outline"
@@ -131,12 +163,15 @@ export function ContactCTA() {
                         <Label htmlFor="name">Name</Label>
                         <Input
                           id="name"
+                          autoComplete="name"
+                          required
                           placeholder="Alex Morgan"
                           aria-invalid={!!errors.name}
+                          aria-describedby={errors.name ? "name-error" : undefined}
                           {...register("name")}
                         />
                         {errors.name && (
-                          <p className="text-xs text-pulz-deep">
+                          <p id="name-error" role="alert" className="text-xs font-medium text-red-700">
                             {errors.name.message}
                           </p>
                         )}
@@ -147,27 +182,35 @@ export function ContactCTA() {
                         <Input
                           id="email"
                           type="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          required
                           placeholder="you@example.com"
                           aria-invalid={!!errors.email}
+                          aria-describedby={errors.email ? "email-error" : undefined}
                           {...register("email")}
                         />
                         {errors.email && (
-                          <p className="text-xs text-pulz-deep">
+                          <p id="email-error" role="alert" className="text-xs font-medium text-red-700">
                             {errors.email.message}
                           </p>
                         )}
                       </div>
 
                       <div className="space-y-2">
-                        <Label htmlFor="message">Message</Label>
+                        <Label htmlFor="message">
+                          Message{" "}
+                          <span className="font-normal text-muted-foreground">(optional)</span>
+                        </Label>
                         <Textarea
                           id="message"
-                          placeholder="I'd love to learn more about PulzFit 1..."
+                          placeholder="I'd love to learn more about PulzFit..."
                           aria-invalid={!!errors.message}
+                          aria-describedby={errors.message ? "message-error" : undefined}
                           {...register("message")}
                         />
                         {errors.message && (
-                          <p className="text-xs text-pulz-deep">
+                          <p id="message-error" role="alert" className="text-xs font-medium text-red-700">
                             {errors.message.message}
                           </p>
                         )}
@@ -186,14 +229,18 @@ export function ContactCTA() {
                           </>
                         ) : (
                           <>
-                            Get Started <ArrowRight className="h-4 w-4" />
+                            Join the waitlist <ArrowRight className="h-4 w-4" />
                           </>
                         )}
                       </Button>
 
                       {mutation.isError && (
-                        <p className="text-center text-xs text-pulz-deep">
-                          Something went wrong. Please try again.
+                        <p role="alert" className="text-center text-xs font-medium text-red-700">
+                          Something went wrong. Please try again or email{" "}
+                          <a className="underline" href={`mailto:${CONTACT_EMAIL}`}>
+                            {CONTACT_EMAIL}
+                          </a>
+                          .
                         </p>
                       )}
                     </motion.form>
